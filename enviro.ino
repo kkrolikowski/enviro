@@ -7,6 +7,7 @@
 // sensor settings
 dht11 sensor;
 #define SENSOR_PIN 2
+const char * sensor_id = "sensor1";
 
 // wifi settings
 const char *ssid = "wifi_ssid";
@@ -83,6 +84,8 @@ String buildHTTPReq(dht11 data)
   httpreq += String((float)data.temperature, 2);
   httpreq += "&hum=";
   httpreq += String((float)data.humidity,2);
+  httpreq += "&sensor_id=";
+  httpreq += sensor_id;
   httpreq += " HTTP/1.0";
   
   return httpreq;
