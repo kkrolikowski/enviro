@@ -1,5 +1,6 @@
 #include <dht11.h>
 #include <ESP8266WiFi.h>
+#include <WiFiClientSecure.h>
 
 /***************************************** Inicjalizacja Sprzetu ********************************/
 
@@ -15,7 +16,7 @@ const char *pass = "wifi_pass";
 
 // stats collector
 const char *server = "backend.server.name";
-WiFiClient http;
+WiFiClientSecure http;
 
 void setup() 
 {
@@ -49,7 +50,7 @@ void loop()
 		ConsolePrint(sensor);
     httphdrs = buildHTTPHeaders();
     httpReq = buildHTTPReq(sensor);
-     if ( http.connect(server, 80))
+     if ( http.connect(server, 443))
      {
       Serial.println("HTTP server connected");
       http.println(httpReq);
