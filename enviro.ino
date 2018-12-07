@@ -1,6 +1,7 @@
 #include <dht11.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
+#include <base64.h>
 
 /***************************************** Inicjalizacja Sprzetu ********************************/
 
@@ -17,6 +18,10 @@ const char *pass = "wifi_pass";
 // stats collector
 const char *server = "backend.server.name";
 WiFiClientSecure http;
+
+// API Authentication
+String apiuser = "apilogin";
+String apipass = "password";
 
 void setup() 
 {
@@ -43,6 +48,9 @@ void loop()
 {
 	int sensStatus = sensor.read(SENSOR_PIN);
   String httphdrs, httpReq;
+  String authplain = apiuser + ':' + apipass;
+  String authdata = base64::encode(authplain);
+  
 	Serial.print("Sensor status: ");
 	switch (sensStatus)
 	{
@@ -55,6 +63,7 @@ void loop()
       Serial.println("HTTP server connected");
       http.println(httpReq);
       http.println(httphdrs);
+      http.println("Authorization: Basic " + authdata);
       http.println();
      }
 		break;
