@@ -23,8 +23,13 @@ WiFiClientSecure http;
 String apiuser = "apilogin";
 String apipass = "password";
 
+// Wifi LED
+int wifi_led = 16;
+
 void setup() 
 {
+  pinMode(wifi_led, OUTPUT);
+  
 	Serial.begin(115200);
   delay(100);
   Serial.println();
@@ -35,9 +40,12 @@ void setup()
   WiFi.begin(ssid, pass);
   while( WiFi.status()  != WL_CONNECTED)
   {
+    digitalWrite(wifi_led, LOW);
     delay(500);
     Serial.print(".");
   }
+  digitalWrite(wifi_led, HIGH);
+  
   Serial.println("");
   Serial.println("Wifi connected");
   Serial.print("IP Address: ");
