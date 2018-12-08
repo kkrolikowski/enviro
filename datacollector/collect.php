@@ -11,12 +11,7 @@
 
     // client data
 
-    $data = array();
-    foreach ($_GET as $param => $value) {
-        if (isset($param)) {
-            $data[$param] = $value;
-        }
-    }
+    $data = json_decode(file_get_contents('php://input'), true);
 
     // data validation
     $mandatory = array('temp', 'sensor_id', 'hum');
