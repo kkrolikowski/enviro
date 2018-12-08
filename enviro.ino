@@ -59,19 +59,28 @@ void loop()
   String authplain = apiuser + ':' + apipass;
   String authdata = base64::encode(authplain);
   
+  String json = jsonData(sensor);
+  char buff[100];
+  json.toCharArray(buff, 100);
+  
 	Serial.print("Sensor status: ");
 	switch (sensStatus)
 	{
 	case DHTLIB_OK:
 		ConsolePrint(sensor);
-    httphdrs = buildHTTPHeaders();
-    httpReq = buildHTTPReq(sensor);
+
      if ( http.connect(server, 443))
      {
       Serial.println("HTTP server connected");
-      http.println(httpReq);
-      http.println(httphdrs);
+      http.println("POST /collect.php HTTP/1.1");
+      http.println("Host: " + String(server));
+      http.println("User-Agent: Arduino/enviro IoT");
       http.println("Authorization: Basic " + authdata);
+      http.println("Content-type: application/json");
+      http.print("Content-Length: ");
+      http.println(strlen(buff));
+      http.println();
+      http.println(buff);
       http.println();
      }
 		break;
@@ -96,23 +105,16 @@ void ConsolePrint(dht11 data)
 	Serial.print("Temperature (C): ");
 	Serial.println((float)data.temperature, 2);
 }
-String buildHTTPReq(dht11 data)
+String jsonData(dht11 sensor_data)
 {
-  String httpreq = "GET /collect.php?temp=";
-  httpreq += String((float)data.temperature, 2);
-  httpreq += "&hum=";
-  httpreq += String((float)data.humidity,2);
-  httpreq += "&sensor_id=";
-  httpreq += sensor_id;
-  httpreq += " HTTP/1.0";
+  String data = "{\"sensor_id\":\"";
+  data += sensor_id;
+  data += "\",\"temp\":\"";
+  data += String((float)sensor_data.temperature, 2);
+  data += "\",\"hum\":\"";
+  data += String((float)sensor_data.humidity, 2);
+  data += "\"}";
   
-  return httpreq;
-}
-String buildHTTPHeaders()
-{
-  String hdr = "Host: ";
-  hdr += server;
-
-  return hdr;
+  return data;
 }
 
