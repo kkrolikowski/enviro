@@ -23,12 +23,16 @@ WiFiClientSecure http;
 String apiuser = "apilogin";
 String apipass = "password";
 
-// Wifi LED
+// LED pins
 int wifi_led = 16;
+int api_ok = 14;
+int api_err = 12;
 
 void setup() 
 {
   pinMode(wifi_led, OUTPUT);
+  pinMode(api_ok, OUTPUT);
+  pinMode(api_err, OUTPUT);
   
 	Serial.begin(115200);
   delay(100);
@@ -71,6 +75,7 @@ void loop()
 
      if ( http.connect(server, 443))
      {
+      digitalWrite(api_ok, HIGH);
       Serial.println("HTTP server connected");
       http.println("POST /collect.php HTTP/1.1");
       http.println("Host: " + String(server));
@@ -82,6 +87,14 @@ void loop()
       http.println();
       http.println(buff);
       http.println();
+      delay(500);
+      digitalWrite(api_ok, LOW);
+     }
+     else
+     {
+      digitalWrite(api_err, HIGH);
+      delay(500);
+      digitalWrite(api_err, LOW);
      }
 		break;
 	case DHTLIB_ERROR_CHECKSUM:
