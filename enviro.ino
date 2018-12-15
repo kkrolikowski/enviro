@@ -24,8 +24,8 @@ String apiuser = "apilogin";
 String apipass = "password";
 
 // LED pins
-int wifi_led = 16;
-int api_ok = 14;
+int wifi_led = 15;
+int api_ok = 13;
 int api_err = 12;
 
 void setup() 
