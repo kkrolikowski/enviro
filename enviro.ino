@@ -108,7 +108,7 @@ void loop()
 		break;
 	}
 
-	delay(1000);
+	ESP.deepSleep(60e6);
 }
 void ConsolePrint(dht11 data)
 {
